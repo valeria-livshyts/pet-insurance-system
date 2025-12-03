@@ -2,9 +2,45 @@ const express = require('express');
 const router = express.Router();
 const {
   getUserById,
-  updateUser
+  updateUser,
+  getDashboard,
+  getPetMedicalHistory
 } = require('../controllers/user.controller');
 const { protect } = require('../middleware/auth');
+
+/**
+ * @swagger
+ * /api/users/dashboard:
+ *   get:
+ *     summary: Кабінет власника тварини
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Дані кабінету (тварини, поліси, заявки)
+ */
+router.get('/dashboard', protect, getDashboard);
+
+/**
+ * @swagger
+ * /api/users/pets/{petId}/medical-history:
+ *   get:
+ *     summary: Медична історія тварини
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: petId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Медичні записи тварини
+ */
+router.get('/pets/:petId/medical-history', protect, getPetMedicalHistory);
 
 /**
  * @swagger
@@ -40,6 +76,18 @@ router.get('/:id', protect, getUserById);
  *         required: true
  *         schema:
  *           type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               phone:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Користувач оновлений

@@ -24,6 +24,7 @@ app.use('/api/policies', require('./routes/policy.routes'));
 app.use('/api/claims', require('./routes/claim.routes'));
 app.use('/api/clinics', require('./routes/clinic.routes'));
 app.use('/api/medical-records', require('./routes/medicalRecord.routes'));
+app.use('/api/admin', require('./routes/admin.routes'));
 
 // Головний маршрут
 app.get('/', (req, res) => {

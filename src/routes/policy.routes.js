@@ -5,9 +5,47 @@ const {
   getAllPolicies,
   getPolicyById,
   updatePolicy,
-  cancelPolicy
+  cancelPolicy,
+  renewPolicy,
+  calculatePremium
 } = require('../controllers/policy.controller');
 const { protect, authorize } = require('../middleware/auth');
+
+/**
+ * @swagger
+ * /api/policies/calculate:
+ *   post:
+ *     summary: Розрахунок вартості полісу
+ *     tags: [Policies]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - coverageType
+ *               - petSpecies
+ *               - petAge
+ *             properties:
+ *               coverageType:
+ *                 type: string
+ *                 enum: [basic, standard, premium]
+ *                 description: Тип покриття
+ *               petSpecies:
+ *                 type: string
+ *                 enum: [dog, cat, bird, rabbit, other]
+ *                 description: Вид тварини
+ *               petAge:
+ *                 type: number
+ *                 description: Вік тварини (років)
+ *     responses:
+ *       200:
+ *         description: Розрахунок премії
+ */
+router.post('/calculate', protect, calculatePremium);
 
 /**
  * @swagger
@@ -48,9 +86,6 @@ const { protect, authorize } = require('../middleware/auth');
  *               coverageType:
  *                 type: string
  *                 enum: [basic, standard, premium]
- *               owner:
- *                 type: string
- *                 description: ID власника (опціонально, для тестування)
  *     responses:
  *       201:
  *         description: Поліс створено
@@ -130,5 +165,25 @@ router.put('/:id', protect, authorize('agent'), updatePolicy);
  *         description: Поліс скасовано
  */
 router.delete('/:id', protect, authorize('agent'), cancelPolicy);
+
+/**
+ * @swagger
+ * /api/policies/{id}/renew:
+ *   post:
+ *     summary: Продовжити поліс на 1 рік
+ *     tags: [Policies]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Поліс продовжено
+ */
+router.post('/:id/renew', protect, renewPolicy);
 
 module.exports = router;
