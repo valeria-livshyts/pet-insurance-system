@@ -80,6 +80,16 @@ const claimSchema = new mongoose.Schema({
   },
   notes: {
     type: String
+  },
+  // IoT інтеграція
+  source: {
+    type: String,
+    enum: ['manual', 'iot_device', 'clinic'],
+    default: 'manual'
+  },
+  iotDataRef: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'IoTData'
   }
 }, {
   timestamps: true
