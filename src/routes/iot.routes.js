@@ -202,36 +202,6 @@ router.get('/pet/:petId/critical', protect, iotController.getCriticalEvents);
  */
 router.get('/pet/:petId/statistics', protect, iotController.getHealthStatistics);
 
-/**
- * @swagger
- * /api/iot/pet/{petId}/chart:
- *   get:
- *     summary: Дані для графіків
- *     tags: [IoT]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: petId
- *         required: true
- *         schema:
- *           type: string
- *       - in: query
- *         name: hours
- *         schema:
- *           type: integer
- *           default: 24
- *       - in: query
- *         name: interval
- *         schema:
- *           type: string
- *           enum: [minute, hour, day]
- *           default: hour
- *     responses:
- *       200:
- *         description: Агреговані дані для графіків
- */
-router.get('/pet/:petId/chart', protect, iotController.getChartData);
 
 /**
  * @swagger

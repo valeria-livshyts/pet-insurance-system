@@ -266,67 +266,6 @@ exports.getHealthStatistics = async (req, res) => {
   }
 };
 
-// Отримання даних для графіка
-exports.getChartData = async (req, res) => {
-  try {
-    const { petId } = req.params;
-    const { hours = 24, interval = 'hour' } = req.query;
-
-    const startDate = new Date(Date.now() - hours * 3600000);
-
-    let groupFormat;
-    switch (interval) {
-      case 'minute':
-        groupFormat = { $dateToString: { format: '%Y-%m-%d %H:%M', date: '$timestamp' } };
-        break;
-      case 'hour':
-        groupFormat = { $dateToString: { format: '%Y-%m-%d %H:00', date: '$timestamp' } };
-        break;
-      case 'day':
-        groupFormat = { $dateToString: { format: '%Y-%m-%d', date: '$timestamp' } };
-        break;
-      default:
-        groupFormat = { $dateToString: { format: '%Y-%m-%d %H:00', date: '$timestamp' } };
-    }
-
-    const chartData = await IoTData.aggregate([
-      {
-        $match: {
-          pet: new require('mongoose').Types.ObjectId(petId),
-          timestamp: { $gte: startDate }
-        }
-      },
-      {
-        $group: {
-          _id: groupFormat,
-          avgTemperature: { $avg: '$sensors.temperature' },
-          avgHeartRate: { $avg: '$sensors.heartRate' },
-          avgActivity: { $avg: '$sensors.activityLevel' },
-          avgHealthIndex: { $avg: '$health.healthIndex' },
-          count: { $sum: 1 }
-        }
-      },
-      {
-        $sort: { _id: 1 }
-      }
-    ]);
-
-    res.json({
-      success: true,
-      interval,
-      count: chartData.length,
-      data: chartData
-    });
-
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Помилка отримання даних графіка',
-      error: error.message
-    });
-  }
-};
-
 // Отримання поточного місцезнаходження тварини
 exports.getLocation = async (req, res) => {
   try {
