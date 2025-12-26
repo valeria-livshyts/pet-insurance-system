@@ -218,7 +218,7 @@ exports.getHealthStatistics = async (req, res) => {
     const stats = await IoTData.aggregate([
       {
         $match: {
-          pet: require('mongoose').Types.ObjectId(petId),
+          pet: new require('mongoose').Types.ObjectId(petId),
           timestamp: { $gte: startDate }
         }
       },
@@ -292,7 +292,7 @@ exports.getChartData = async (req, res) => {
     const chartData = await IoTData.aggregate([
       {
         $match: {
-          pet: require('mongoose').Types.ObjectId(petId),
+          pet: new require('mongoose').Types.ObjectId(petId),
           timestamp: { $gte: startDate }
         }
       },
