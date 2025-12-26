@@ -5,14 +5,18 @@ const swaggerSpec = require('./config/swagger');
 
 const app = express();
 
-// Middleware
+// Middleware CORS — для Render и Swagger
 app.use(cors({
   origin: process.env.ALLOWED_ORIGINS || '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization'],
   credentials: true
 }));
 
+// Разрешаем preflight-запросы
+app.options('*', cors());
+
+// JSON middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -40,9 +44,7 @@ app.get('/', (req, res) => {
 });
 
 // Обробка 404
-app.use((req, res) => {
-  res.status(404).json({ message: 'Маршрут не знайдено' });
-});
+app.use((req, res) => res.status(404).json({ message: 'Маршрут не знайдено' }));
 
 // Глобальна обробка помилок
 app.use((err, req, res, next) => {

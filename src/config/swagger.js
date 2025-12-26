@@ -7,14 +7,17 @@ const options = {
       title: 'Pet Insurance System API',
       version: '1.0.0',
       description: 'API для системи медичного страхування тварин',
-      contact: {
-        name: 'API Support',
-      },
+      contact: { name: 'API Support' },
     },
+    // Добавляем серверы для локали и для Render
     servers: [
       {
-        url: 'https://pet-insurance-system.onrender.com',
-        description: 'Development server',
+        url: 'http://localhost:5000', // для локального теста
+        description: 'Local server',
+      },
+      {
+        url: 'https://pet-insurance-system.onrender.com', // production
+        description: 'Render production server',
       },
     ],
     components: {
@@ -26,11 +29,7 @@ const options = {
         },
       },
     },
-    security: [
-      {
-        bearerAuth: [],
-      },
-    ],
+    security: [{ bearerAuth: [] }],
   },
   apis: ['./src/routes/*.js', './src/models/*.js'],
 };
